@@ -1,0 +1,22 @@
+# Studio output - never part of this repo
+work/
+.critic/
+renders/
+stills/
+
+# Render + tooling artifacts
+.hyperframes/
+.thumbnails/
+*.mp4
+*.webm
+*.mov
+*.raw
+*.log
+
+# Node
+node_modules/
+package-lock.json
+
+# OS
+Thumbs.db
+.DS_Store

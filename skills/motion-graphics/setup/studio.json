@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "name": "motion-graphics-studio",
+  "note": "The manifest a fresh machine bootstraps from. Repos are pinned by commit so two machines build the same studio.",
+  "testedOn": "2026-11-06",
+  "hyperframesCliTested": "0.9.19",
+  "prereqs": {
+    "node": ">=22",
+    "ffmpeg": "any recent build with ffprobe",
+    "git": "any"
+  },
+  "kitCounts": {
+    "tools": 14,
+    "prompts": 118,
+    "templates": 20
+  },
+  "repos": [
+    {
+      "name": "hyperframes",
+      "url": "https://github.com/heygen-com/hyperframes",
+      "commit": "49e0312300d6c049b19eb8435930f980621a993f",
+      "lfsSkipSmudge": true,
+      "why": "the engine, the 448-item registry, the craft skills and seam-gate.mjs"
+    },
+    {
+      "name": "claude-animation-skill",
+      "url": "https://github.com/buildwithhanif/claude-animation-skill",
+      "commit": "4ddb8c80fdec96dc9f55d4b9bdee60bde6f0134b",
+      "lfsSkipSmudge": false,
+      "why": "MIT music beds, SFX voices, loudnorm finishing"
+    },
+    {
+      "name": "ffmpeg-skill",
+      "url": "https://github.com/kajisho5/ffmpeg-skill",
+      "commit": "1ae1bdf1ca0adbb1606fbca493948b1bbb2f83ff",
+      "lfsSkipSmudge": false,
+      "why": "delivery and finishing recipes"
+    },
+    {
+      "name": "ClaudeAnimationBase",
+      "url": "https://github.com/JohnHeibel/ClaudeAnimationBase",
+      "commit": "0ac8bf2b31942376cb6b8c4074715595d512acd2",
+      "lfsSkipSmudge": false,
+      "why": "hand-drawn p5.brush character pipeline (MIT)"
+    },
+    {
+      "name": "awesome-ai-motion",
+      "url": "https://github.com/guanmo-ai/awesome-ai-motion",
+      "commit": "8733ddf7cb18fea32bc296ab185934013ceac2e5",
+      "lfsSkipSmudge": false,
+      "trim": ["assets"],
+      "why": "1,728 case studies and browse/resources.en.md (190 licensed source repos); assets/ is 56 MB of cover images we do not read"
+    },
+    {
+      "name": "PDoomVideo",
+      "url": "https://github.com/JohnHeibel/PDoomVideo",
+      "commit": "fa546a38092e75f2b079e6a86d6abc54dd525d17",
+      "lfsSkipSmudge": false,
+      "why": "chapter-per-scene music-video structure; adapt only, never ship assets/pdoom.mp3"
+    }
+  ]
+}
