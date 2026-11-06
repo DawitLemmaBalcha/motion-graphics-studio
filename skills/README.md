@@ -35,7 +35,7 @@ second render contract and a second quality bar, and the two drift.
 `product-ad-video` (`~/.dsh/skills/product-ad-video`) is **outside the studio**, not vendored, not
 indexed above. It is a Remotion-based specialist for paid-social ad creative — voiceover-driven,
 9:16 + 4:5 Meta placements, cover art. It carries its own template, presets and audio measurement, and
-it does **not** go through `tools/measure.ps1` or the seam ledger.
+it does **not** go through `tools/mg.mjs measure` or the seam ledger.
 
 The boundary, so nobody has to guess later:
 

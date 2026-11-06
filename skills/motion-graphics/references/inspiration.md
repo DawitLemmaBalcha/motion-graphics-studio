@@ -21,12 +21,12 @@ Not inspiration sources, but adjacent: `templates/LANES.md` (our looks) and the 
 ## How to search them
 
 ```powershell
-$MG = if ($env:MG_STUDIO) { $env:MG_STUDIO } elseif (Test-Path ".\tools\check-env.ps1") { (Get-Location).Path } else { Join-Path $env:USERPROFILE "projects\motion-graphics" }
+$MG = if ($env:MG_STUDIO) { $env:MG_STUDIO } elseif (Test-Path "tools\mg.mjs") { (Get-Location).Path } else { Join-Path $env:USERPROFILE "projects\motion-graphics" }
 
 # all three sources, one helper
-& "$MG\tools\find-source.ps1" -Loop tunnel      # 80 loop sources (code)
-& "$MG\tools\find-source.ps1" -Prompt shader    # 112 prompts + 1,728 cases (no code)
-& "$MG\tools\find-source.ps1" -Repo three       # 190 licensed source repos (code)
+node "$MG/tools/mg.mjs" find --loop tunnel      # 80 loop sources (code)
+node "$MG/tools/mg.mjs" find --prompt shader    # 112 prompts + 1,728 cases (no code)
+node "$MG/tools/mg.mjs" find --repo three       # 190 licensed source repos (code)
 
 # S2 — find a technique precedent by hand
 Select-String -Path "$MG\repos\awesome-ai-motion\cases\*.en.md" -Pattern 'shader' -List |

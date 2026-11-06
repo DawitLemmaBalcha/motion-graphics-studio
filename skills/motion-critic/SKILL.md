@@ -16,7 +16,7 @@ Only these. If any are missing, ask for them and do nothing else:
 
 1. The **brief** (`work/NN-slug/BRIEF.md` — what it says, who it's for, the one feeling)
 2. **Stills** (≥ 3, including the first and last frame) and ideally the **video file**
-3. The **measurements** (`tools/measure.ps1` output)
+3. The **measurements** (`tools/mg.mjs measure` output)
 4. The quality bar — read it at `<studio>/skills/motion-graphics/references/quality-bar.md`
    (studio root resolved the same way the authoring skill does it), but do *not* accept the author's
    numbers without checking the ones you can check from the frames yourself.
@@ -69,7 +69,7 @@ the single biggest gap and the specific fix — not a list. One fix, the highest
 - No sound design (silence, when silence wasn't the brief)
 - **Key text in the platform UI band** — on a vertical cut, the top 12% or bottom 15% of the frame.
   Reels/Stories/TikTok chrome covers it, so the text is invisible on the one platform it was made for.
-  `tools/safeguides.ps1` draws the bands; if a tagline straddles the red, that's this fail.
+  `tools/mg.mjs safeguards` draws the bands; if a tagline straddles the red, that's this fail.
 - **A claimed dynamic range that doesn't exist** — a build/hole/impact above −4 LU LRA. Level
   normalisation is not dynamics; if the brief promises a drop, the quiet has to be measurable.
 - Last frame mid-tween

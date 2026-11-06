@@ -100,7 +100,7 @@ the move.
 ## Verify
 
 ```powershell
-$mg = if ($env:MG_STUDIO) { $env:MG_STUDIO } elseif (Test-Path ".\tools\check-env.ps1") { (Get-Location).Path } else { Join-Path $env:USERPROFILE "projects\motion-graphics" }
+$mg = if ($env:MG_STUDIO) { $env:MG_STUDIO } elseif (Test-Path "tools\mg.mjs") { (Get-Location).Path } else { Join-Path $env:USERPROFILE "projects\motion-graphics" }
 $gate = "$mg\repos\hyperframes\.agents\skills\motion-doctrine\scripts"
 
 # find the real carrier selectors when authoring a row

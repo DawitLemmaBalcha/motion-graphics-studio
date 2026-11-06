@@ -27,7 +27,7 @@ Root: resolved at step 0, never hardcoded. Every path below is relative to it.
 
 **The studio is a folder, and it can be rebuilt from scratch.** This skill carries the kit
 (`setup/`) and can bootstrap the whole studio on a machine that has nothing: the tools, the prompt
-templates, the lanes, and the six pinned upstream repos. If `tools/check-env.ps1` doesn't resolve,
+templates, the lanes, and the six pinned upstream repos. If `tools/mg.mjs env` doesn't resolve,
 go to step 0 and build it — do not improvise a substitute studio elsewhere.
 
 | Path | Open it for |
@@ -39,11 +39,11 @@ go to step 0 and build it — do not improvise a substitute studio elsewhere.
 | `prompts/library/` | 112 real creator prompts from shipped work — borrow shape, not content. |
 | `templates/LANES.md` | the three house looks. Pick one, or define a new one there. |
 | `templates/README.md` | catalog families, starter repos, reference sites. |
-| `tools/check-env.ps1` | verify node/ffmpeg/hyperframes before you blame the code. |
-| `tools/render.ps1` | one-command render into `work/<piece>/renders/`. |
-| `tools/measure.ps1` | the quality bar as numbers. |
-| `tools/safeguides.ps1` | 90/80 safe boxes + the platform UI bands, burned onto frames. |
-| `tools/portfolio-poster.ps1` | renders the set-level thumbnail grid — the "set, not just the piece" test. |
+| `tools/mg.mjs env` | verify node/ffmpeg/hyperframes before you blame the code. |
+| `tools/mg.mjs render` | one-command render into `work/<piece>/renders/`. |
+| `tools/mg.mjs measure` | the quality bar as numbers. |
+| `tools/mg.mjs safeguards` | 90/80 safe boxes + the platform UI bands, burned onto frames. |
+| `tools/mg.mjs poster` | renders the set-level thumbnail grid — the "set, not just the piece" test. |
 | `prompts/INSPIRATION.md` | what the piece borrows, and from where — **filled before the lane is locked**. |
 | `work/<NN-slug>/` | the piece. One folder, never shared. |
 | `work/STUDIO-NOTES.md` | what past builds learned — read before repeating a mistake. |
@@ -54,7 +54,7 @@ go to step 0 and build it — do not improvise a substitute studio elsewhere.
 | `repos/ffmpeg-skill/` | delivery encodes and finishing (MIT). |
 | `templates/scenario-motion-loops/` | **all 80 Scenario loops as source** (`loops/js/tiles/bg|sh/*.js`) + `scripts/loop-template.html`, `scripts/render-loop.mjs` with a loop-seam check, `references/loop-craft.md`. Code to adapt. |
 | `repos/awesome-ai-motion/` | 1,728 precedents + `browse/resources.en.md`: 190 works linking to the real source repos, each with its licence. |
-| `tools/find-source.ps1` | search all three: `-Loop tunnel`, `-Prompt shader`, `-Repo three`. |
+| `tools/mg.mjs find` | search all three: `--loop tunnel`, `--prompt shader`, `--repo three`. |
 
 **Load these alongside this skill, not instead of it:** the `hyperframes` skill for the render contract,
 `hyperframes-registry` for the 448-item catalog, `hyperframes-cli` for CLI recovery. In OpenCode, load by
@@ -71,29 +71,39 @@ gate because a piece "seems simple".** Simple pieces are where the sloppiness sh
 
 Resolve the root. Never hardcode it, and never improvise a studio somewhere else:
 
-```powershell
-$MG = if ($env:MG_STUDIO) { $env:MG_STUDIO } elseif (Test-Path ".\tools\check-env.ps1") { (Get-Location).Path } else { Join-Path $env:USERPROFILE "projects\motion-graphics" }
-Test-Path "$MG\tools\check-env.ps1"
-```
-
-**If that prints `False`, this machine has no studio yet.** Build one from the kit this skill carries,
-then carry on with step 1:
+Resolve the root. Never hardcode it, and never improvise a studio somewhere else:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File "<the folder holding this SKILL.md>\setup\bootstrap.ps1"
+# Windows PowerShell
+$MG = if ($env:MG_STUDIO) { $env:MG_STUDIO } elseif (Test-Path "tools\mg.mjs") { (Get-Location).Path } else { Join-Path $env:USERPROFILE "projects\motion-graphics" }
 ```
 
-It creates the studio (default `%USERPROFILE%\projects\motion-graphics`), installs `tools/`, `prompts/`
-and `templates/`, clones the six upstream repos at the commits pinned in `setup/studio.json`, sets
+```bash
+# bash / zsh
+MG="${MG_STUDIO:-$PWD}"; [ -f "$MG/tools/mg.mjs" ] || MG="$HOME/projects/motion-graphics"
+```
+
+**If `tools/mg.mjs` is not there, this machine has no studio yet.** Build one from the kit this skill
+carries, then carry on with step 1:
+
+```bash
+node "<the folder holding this SKILL.md>/setup/bootstrap.mjs"
+```
+
+It creates the studio (default `~/projects/motion-graphics`), installs `tools/`, `prompts/` and
+`templates/`, clones the six upstream repos at the commits pinned in `setup/studio.json`, sets
 `MG_STUDIO`, and runs the environment check. It is **idempotent**: re-running repairs a partial install
-and reports drift. Tell the person it downloads roughly 600 MB before you start it.
+and reports drift. It downloads roughly 600 MB — say so before you start it.
 
-Then verify — **always invoke through the bypass**. The Windows policy is `RemoteSigned` and a bare
-`& .\tools\x.ps1` intermittently fails "not digitally signed", which costs three tool calls to discover:
+Then verify:
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File "$MG\tools\check-env.ps1"
+```bash
+node "$MG/tools/mg.mjs" env
 ```
+
+**One tool layer, one runtime.** `tools/mg.mjs` is the whole toolbox as subcommands — `env`, `check`,
+`render`, `measure`, `safeguards`, `find`, `poster` — and it behaves identically on Windows, Linux and
+macOS. There are no execution-policy flags and no shell-specific invocations to get wrong.
 
 Confirms node ≥ 22, ffmpeg, the repos and the seam gate. Record the hyperframes version in `BRIEF.md` —
 renders are only reproducible against a known CLI.
@@ -134,10 +144,10 @@ weighted / liquid). Read `references/design-system.md`.
 | `repos/awesome-ai-motion/cases/*.en.md` | 1,728 shipped pieces with the creator's prompt and a "what to learn". |
 
 ```powershell
-$MG = if ($env:MG_STUDIO) { $env:MG_STUDIO } elseif (Test-Path ".\tools\check-env.ps1") { (Get-Location).Path } else { Join-Path $env:USERPROFILE "projects\motion-graphics" }
-& "$MG\tools\find-source.ps1" -Loop tunnel      # 80 loop sources
-& "$MG\tools\find-source.ps1" -Prompt shader    # 112 prompts + 1,728 case studies
-& "$MG\tools\find-source.ps1" -Repo three       # 190 licensed source repos
+$MG = if ($env:MG_STUDIO) { $env:MG_STUDIO } elseif (Test-Path "tools\mg.mjs") { (Get-Location).Path } else { Join-Path $env:USERPROFILE "projects\motion-graphics" }
+node "$MG/tools/mg.mjs" find --loop tunnel      # 80 loop sources
+node "$MG/tools/mg.mjs" find --prompt shader    # 112 prompts + 1,728 case studies
+node "$MG/tools/mg.mjs" find --repo three       # 190 licensed source repos
 ```
 
 Fill `prompts/INSPIRATION.md`: ≥ 3 references from ≥ 2 sources, split into **steal the look** (no code)
@@ -193,8 +203,8 @@ blocks with `add`, then author. Obey the 12-rule render contract from `/hyperfra
 
 ### 8 · Render, measure, look
 ```powershell
-& "$MG\tools\render.ps1" -Piece 01-slug
-& "$MG\tools\measure.ps1" -Piece 01-slug
+node "$MG/tools/mg.mjs" render --piece 01-slug
+node "$MG/tools/mg.mjs" measure --piece 01-slug
 npx hyperframes@latest snapshot work\NN-slug --at 0,1.5,3,4.2,6.8 --zoom "#hero"
 ```
 Then **open the stills and actually look at them.** Numbers don't catch ugly.
@@ -210,7 +220,7 @@ re-check.
 
 ### 10 · Deliver
 ```powershell
-& "$MG\tools\render.ps1" -Piece 01-slug -Aspect 9:16
+node "$MG/tools/mg.mjs" render --piece 01-slug --aspect 9:16
 ```
 Master 16:9 + 9:16 cut, 3–5 full-res stills for thumbnails, `attribution.md`, numbers in `BRIEF.md`.
 A piece with no stills is not deliverable.

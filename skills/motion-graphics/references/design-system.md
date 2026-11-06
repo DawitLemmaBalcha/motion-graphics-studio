@@ -94,5 +94,5 @@ On vertical, the **top 12% and bottom 15%** are covered by the platform's own ch
 not by assumption:
 
 ```powershell
-& "$MG\tools\safeguides.ps1" -Piece 01-slug        # burns 90/80 boxes + the UI bands onto 5 frames
+node "$MG/tools/mg.mjs" safeguards --piece 01-slug        # burns 90/80 boxes + the UI bands onto 5 frames
 ```

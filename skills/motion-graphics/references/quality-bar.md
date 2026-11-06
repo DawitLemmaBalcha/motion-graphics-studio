@@ -1,7 +1,7 @@
 # Quality bar
 
 The bar is numbers, not adjectives. Every piece must pass all of it before delivery, and the numbers go
-into `BRIEF.md`. `tools/measure.ps1` runs most of this in one go.
+into `BRIEF.md`. `tools/mg.mjs measure` runs most of this in one go.
 
 | # | Metric | Target | How |
 |---|---|---|---|
@@ -18,9 +18,9 @@ into `BRIEF.md`. `tools/measure.ps1` runs most of this in one go.
 | 11 | Legibility with sound off | the whole message reads from the picture + text alone | watch muted |
 | 12 | Stills | ≥ 3, full resolution, saved to `work/NN-slug/stills/` | `snapshot` |
 | 13 | Vertical cut | 1080×1920, **recomposed** not cropped | render again |
-| 14 | File | H.264, `yuv420p`, `+faststart`, CRF 16–18 | `tools/render.ps1` |
+| 14 | File | H.264, `yuv420p`, `+faststart`, CRF 16–18 | `tools/mg.mjs render` |
 | 15 | Loudness range | 4–9 LU on pieces ≥ 10s (a 6s sting is exempt) | `loudnorm` summary → `Input LRA` |
-| 16 | Safe area | key text inside the 80% box; 9:16 bottom 15% and top 12% clear of text | `tools/safeguides.ps1`, then look |
+| 16 | Safe area | key text inside the 80% box; 9:16 bottom 15% and top 12% clear of text | `tools/mg.mjs safeguards`, then look |
 
 **On #15 — the metric this bar was missing.** Loudness *level* and loudness *range* are different
 goals. A mix can hit −14 LUFS exactly and still be squashed flat, because nothing was allowed to be
@@ -28,7 +28,7 @@ quiet. If the piece has a build, a drop or a hole before an impact, LRA should s
 piece with dynamics means the compressor is doing the storytelling; over 9 means the quiet parts will
 disappear on phone speakers.
 
-**On #16 — automate the drawing, not the judgement.** `safeguides.ps1` burns the 90%/80% boxes onto key
+**On #16 — automate the drawing, not the judgement.** `tools/mg.mjs safeguards` burns the 90%/80% boxes onto key
 frames so the check is lookable rather than abstract. Content under the platform's UI is invisible to
 `check --json`; only the frame shows it.
 
@@ -47,7 +47,7 @@ In practice, in order:
 ## Reading the numbers
 
 ```powershell
-& "$MG\tools\measure.ps1" -Piece 01-slug
+node "$MG/tools/mg.mjs" measure --piece 01-slug
 ```
 
 Writes `work/01-slug/stills/measure.txt` and prints a PASS/FAIL table. Numbers that fail block

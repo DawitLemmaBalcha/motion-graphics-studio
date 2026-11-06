@@ -3,13 +3,13 @@
 Commands assume:
 
 ```powershell
-$MG = if ($env:MG_STUDIO) { $env:MG_STUDIO } elseif (Test-Path ".\tools\check-env.ps1") { (Get-Location).Path } else { Join-Path $env:USERPROFILE "projects\motion-graphics" }
+$MG = if ($env:MG_STUDIO) { $env:MG_STUDIO } elseif (Test-Path "tools\mg.mjs") { (Get-Location).Path } else { Join-Path $env:USERPROFILE "projects\motion-graphics" }
 ```
 
 ## 0 · Environment
 
 ```powershell
-& "$MG\tools\check-env.ps1"
+node "$MG/tools/mg.mjs" env
 ```
 
 Expect node ≥ 22, ffmpeg/ffprobe on PATH, hyperframes reachable. Record the CLI version in `BRIEF.md`;
@@ -120,9 +120,9 @@ Iterate until zero errors. Each finding usually carries a `Fix:` line — read i
 ## 9 · Render and look
 
 ```powershell
-& "$MG\tools\render.ps1" -Piece 02-kinetic-type -Draft    # iterate on this
-& "$MG\tools\measure.ps1" -Piece 02-kinetic-type           # measures the newest render
-& "$MG\tools\safeguides.ps1" -Piece 02-kinetic-type        # 90/80 boxes + platform UI bands
+node "$MG/tools/mg.mjs" render --piece 02-kinetic-type --draft    # iterate on this
+node "$MG/tools/mg.mjs" measure --piece 02-kinetic-type           # measures the newest render
+node "$MG/tools/mg.mjs" safeguards --piece 02-kinetic-type        # 90/80 boxes + platform UI bands
 npx hyperframes@latest snapshot $piece --at 0,1.5,3.5,6.8 --zoom "#hero" -o "$piece\stills\check"
 ```
 
@@ -130,7 +130,7 @@ Open the stills. Numbers can't see ugly.
 
 ### The render tax — read this before your third render
 
-`measure.ps1` measures an **encoded master**, so every fix costs a full render before it can be
+`tools/mg.mjs measure` measures an **encoded master**, so every fix costs a full render before it can be
 judged. On a 10s piece that is 4–5 minutes each. One measured piece spent **31% of a 2.4-hour session
 in render/measure/debug loops across 10 renders**, and half of those were avoidable.
 
@@ -139,7 +139,7 @@ The rules that follow from that:
 1. **Look before you render.** `snapshot --at <every beat>` is seconds, not minutes, and it catches
    layout, grade, and type errors. Three of those ten renders were "I rendered before the look was
    right".
-2. **Iterate at `-Draft`.** Freeze/contrast/safe-area/hold metrics are quality-independent; only
+2. **Iterate at `--draft`.** Freeze/contrast/safe-area/hold metrics are quality-independent; only
    loudness needs the real encode. Measure on draft, sign off on delivery.
 3. **Never write per-frame to N elements.** Static-frame dedup is disabled by continuously updated
    nodes (and by any `<canvas>`), which is what makes the *held end state* metric fail even when the
@@ -164,7 +164,7 @@ See `prompts/CRITIC.md` for the exact dispatch. Record the verdict in `BRIEF.md`
 ## 11 · Deliver
 
 ```powershell
-& "$MG\tools\render.ps1" -Piece 02-kinetic-type -Aspect 9:16
+node "$MG/tools/mg.mjs" render --piece 02-kinetic-type --aspect 9:16
 ```
 
 Deliverables: 16:9 master, 9:16 recomposed cut, ≥ 3 stills, `attribution.md`, `measure.txt`.
