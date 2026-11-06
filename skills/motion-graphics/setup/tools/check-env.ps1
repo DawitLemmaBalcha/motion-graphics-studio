@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
   Verify the motion-graphics toolchain before blaming the code.
 .DESCRIPTION
@@ -48,9 +48,10 @@ $m = [regex]::Match($help, 'hyperframes\s+v([0-9][0-9a-zA-Z\.\-]*)')
 if ($m.Success) { $hfVersion = $m.Groups[1].Value }
 Add-Row 'hyperframes' ($m.Success) $(if ($m.Success) { "v$hfVersion" } else { 'CLI not reachable via npx' })
 
-# project shape
+# project shape. The skills themselves live in the agent's skills directory, not in the studio,
+# so they are not checked here - this must pass on a studio built by setup/bootstrap.ps1.
 $root = Split-Path -Parent $PSScriptRoot
-foreach ($d in @('skills', 'tools', 'templates', 'prompts', 'work')) {
+foreach ($d in @('tools', 'templates', 'prompts', 'work')) {
   Add-Row "folder $d" (Test-Path (Join-Path $root $d)) 'project structure'
 }
 foreach ($r in @('hyperframes', 'claude-animation-skill', 'ffmpeg-skill', 'awesome-ai-motion')) {
